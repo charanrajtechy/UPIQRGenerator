@@ -1,4 +1,4 @@
-import { X, ExternalLink } from "lucide-react";
+import { X } from "lucide-react";
 
 interface Props {
   open: boolean;
@@ -41,15 +41,6 @@ const AboutModal = ({ open, onClose }: Props) => {
           This project is built with the goal of providing a simple and transparent way to create UPI payment QR codes while respecting user privacy.
         </p>
 
-        <a
-          href="https://github.com/charanrajtechy/upiqrgenerator"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-xs font-medium text-primary hover:underline"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-          View Project on GitHub
-        </a>
 
         <p className="text-[11px] text-muted-foreground text-center pt-2 border-t border-border">
           Built by Charan Raj – CLP Studio
