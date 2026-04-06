@@ -30,25 +30,7 @@ interface DecodedUpi {
   txnType?: string;
 }
 
-interface DecodedMandate {
-  upiId: string;
-  name: string;
-  amount: string;
-  note: string;
-  mc: string;
-  mn: string;
-  tid: string;
-  orgid: string;
-  recur: string;
-  amrule: string;
-  validitystart: string;
-  validityend: string;
-  txnType: string;
-  raw: string;
-  isMandate: boolean;
-}
-
-function parseUpiLink(data: string): (DecodedUpi & { isMandate?: boolean; mc?: string; mn?: string; tid?: string; orgid?: string; recur?: string; amrule?: string; validitystart?: string; validityend?: string; txnType?: string }) | null {
+function parseUpiLink(data: string): DecodedUpi | null {
   try {
     const isMandate = data.startsWith("upi://mandate");
     const isPay = data.startsWith("upi://pay");
