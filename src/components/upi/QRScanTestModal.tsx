@@ -18,6 +18,16 @@ interface DecodedUpi {
   amount: string;
   note: string;
   raw: string;
+  isMandate?: boolean;
+  mc?: string;
+  mn?: string;
+  tid?: string;
+  orgid?: string;
+  recur?: string;
+  amrule?: string;
+  validitystart?: string;
+  validityend?: string;
+  txnType?: string;
 }
 
 interface DecodedMandate {
