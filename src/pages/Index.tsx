@@ -46,7 +46,17 @@ function loadTemplate(): { upiId: string; name: string; logoDataUrl?: string } |
   }
 }
 
-const UpiQrGenerator = () => {
+  const [mode, setMode] = useState<"payment" | "mandate">("payment");
+  const [betaEnabled, setBetaEnabled] = useState(() => localStorage.getItem("beta_features") === "true");
+
+  // Listen for beta toggle changes from settings
+  useEffect(() => {
+    const handler = () => setBetaEnabled(localStorage.getItem("beta_features") === "true");
+    window.addEventListener("beta-toggle", handler);
+    window.addEventListener("storage", handler);
+    return () => { window.removeEventListener("beta-toggle", handler); window.removeEventListener("storage", handler); };
+  }, []);
+
   const savedTemplate = loadTemplate();
 
   const [form, setForm] = useState<FormData>({
