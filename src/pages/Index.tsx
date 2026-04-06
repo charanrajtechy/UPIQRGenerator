@@ -18,6 +18,7 @@ import QRZoomModal from "@/components/upi/QRZoomModal";
 import ResetAllDialog from "@/components/upi/ResetAllDialog";
 import AppFooter from "@/components/upi/AppFooter";
 import QRSafetyChecker from "@/components/upi/QRSafetyChecker";
+import AutoPayMandateForm from "@/components/upi/AutoPayMandateForm";
 import { buildUpiLink } from "@/components/upi/buildUpiLink";
 import { shareQR, downloadQR } from "@/components/upi/shareQR";
 import { renderCustomQR, type FinderStyle, type ModuleStyle } from "@/components/upi/renderCustomQR";
@@ -45,7 +46,17 @@ function loadTemplate(): { upiId: string; name: string; logoDataUrl?: string } |
   }
 }
 
-const UpiQrGenerator = () => {
+  const [mode, setMode] = useState<"payment" | "mandate">("payment");
+  const [betaEnabled, setBetaEnabled] = useState(() => localStorage.getItem("beta_features") === "true");
+
+  // Listen for beta toggle changes from settings
+  useEffect(() => {
+    const handler = () => setBetaEnabled(localStorage.getItem("beta_features") === "true");
+    window.addEventListener("beta-toggle", handler);
+    window.addEventListener("storage", handler);
+    return () => { window.removeEventListener("beta-toggle", handler); window.removeEventListener("storage", handler); };
+  }, []);
+
   const savedTemplate = loadTemplate();
 
   const [form, setForm] = useState<FormData>({
@@ -288,6 +299,34 @@ const UpiQrGenerator = () => {
         </p>
       </div>
 
+      {/* Beta Mode Toggle */}
+      {betaEnabled && (
+        <div className="w-full max-w-md mb-4 flex bg-muted rounded-xl p-1">
+          <button
+            type="button"
+            onClick={() => setMode("payment")}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === "payment" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Payment QR
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("mandate")}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === "mandate" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            AutoPay Mandate
+          </button>
+        </div>
+      )}
+
+      {/* Mandate Mode */}
+      {betaEnabled && mode === "mandate" ? (
+        <div className="w-full max-w-md">
+          <AutoPayMandateForm />
+          <AppFooter />
+        </div>
+      ) : (
+      <>
       <div className="w-full max-w-md bg-card rounded-2xl shadow-card p-6 sm:p-8 space-y-5">
         <InputField
           label="UPI ID"
@@ -509,6 +548,8 @@ const UpiQrGenerator = () => {
         onClose={() => setResetDialogOpen(false)}
         onConfirm={handleResetAll}
       />
+      </>
+      )}
     </div>
   );
 };

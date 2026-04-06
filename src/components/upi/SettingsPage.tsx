@@ -1,5 +1,40 @@
 import { useState, useEffect, useCallback } from "react";
-import { X, Bell, BellOff } from "lucide-react";
+import { X, Bell, BellOff, FlaskConical } from "lucide-react";
+
+function BetaToggle() {
+  const [enabled, setEnabled] = useState(() => localStorage.getItem("beta_features") === "true");
+
+  const toggle = () => {
+    const next = !enabled;
+    setEnabled(next);
+    localStorage.setItem("beta_features", String(next));
+    window.dispatchEvent(new Event("beta-toggle"));
+  };
+
+  return (
+    <div className="p-4 rounded-xl bg-secondary/50 space-y-2">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <FlaskConical className="w-5 h-5 text-primary flex-shrink-0" />
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-foreground">Beta Features</p>
+            <p className="text-xs text-muted-foreground">
+              {enabled ? "You can now test beta features." : "Access beta features before rolled out globally."}
+            </p>
+          </div>
+        </div>
+        <button type="button" onClick={toggle} className={`relative w-11 h-6 flex-shrink-0 rounded-full transition-colors ${enabled ? "bg-primary" : "bg-muted"}`}>
+          <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-5" : ""}`} />
+        </button>
+      </div>
+      {enabled && (
+        <p className="text-[10px] text-yellow-600 dark:text-yellow-400">
+          ⚠️ Beta features may not work properly. Submit your experience — we will fix them.
+        </p>
+      )}
+    </div>
+  );
+}
 
 interface SettingsPageProps {
   open: boolean;
@@ -76,6 +111,9 @@ const SettingsPage = ({ open, onClose }: SettingsPageProps) => {
         </div>
 
         <div className="space-y-4">
+          {/* Beta Features Toggle */}
+          <BetaToggle />
+
           {/* Notifications */}
           <div className="flex items-center justify-between gap-3 p-4 rounded-xl bg-secondary/50">
             <div className="flex items-center gap-3 min-w-0">
