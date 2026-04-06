@@ -548,6 +548,8 @@ function loadTemplate(): { upiId: string; name: string; logoDataUrl?: string } |
         onClose={() => setResetDialogOpen(false)}
         onConfirm={handleResetAll}
       />
+      </>
+      )}
     </div>
   );
 };
