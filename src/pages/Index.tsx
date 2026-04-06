@@ -299,6 +299,34 @@ function loadTemplate(): { upiId: string; name: string; logoDataUrl?: string } |
         </p>
       </div>
 
+      {/* Beta Mode Toggle */}
+      {betaEnabled && (
+        <div className="w-full max-w-md mb-4 flex bg-muted rounded-xl p-1">
+          <button
+            type="button"
+            onClick={() => setMode("payment")}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === "payment" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Payment QR
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("mandate")}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === "mandate" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            AutoPay Mandate
+          </button>
+        </div>
+      )}
+
+      {/* Mandate Mode */}
+      {betaEnabled && mode === "mandate" ? (
+        <div className="w-full max-w-md">
+          <AutoPayMandateForm />
+          <AppFooter />
+        </div>
+      ) : (
+      <>
       <div className="w-full max-w-md bg-card rounded-2xl shadow-card p-6 sm:p-8 space-y-5">
         <InputField
           label="UPI ID"
