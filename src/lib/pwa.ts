@@ -10,6 +10,28 @@ type BIPEvent = Event & {
 let deferredPrompt: BIPEvent | null = null;
 const listeners = new Set<(available: boolean) => void>();
 
+let waitingWorker: ServiceWorker | null = null;
+const updateListeners = new Set<(available: boolean) => void>();
+
+function emitUpdate() {
+  updateListeners.forEach((cb) => cb(!!waitingWorker));
+}
+
+export function onUpdateAvailable(cb: (available: boolean) => void) {
+  updateListeners.add(cb);
+  cb(!!waitingWorker);
+  return () => updateListeners.delete(cb);
+}
+
+export function applyUpdate() {
+  if (!waitingWorker) {
+    window.location.reload();
+    return;
+  }
+  // Tell the waiting SW to activate; controllerchange handler reloads the page
+  waitingWorker.postMessage({ type: "SKIP_WAITING" });
+}
+
 function isInIframe(): boolean {
   try {
     return window.self !== window.top;
@@ -87,11 +109,45 @@ export function initPwa() {
     return;
   }
 
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/sw.js")
+      .then((reg) => {
+        // Already a waiting worker on first load
+        if (reg.waiting && navigator.serviceWorker.controller) {
+          waitingWorker = reg.waiting;
+          emitUpdate();
+        }
+
+        reg.addEventListener("updatefound", () => {
+          const newWorker = reg.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener("statechange", () => {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
+              waitingWorker = newWorker;
+              emitUpdate();
+            }
+          });
+        });
+
+        // Periodically check for updates (every 30 min) and on tab focus
+        const check = () => reg.update().catch(() => {});
+        setInterval(check, 30 * 60 * 1000);
+        window.addEventListener("focus", check);
+      })
       .catch(() => {
         /* silent */
       });
   });
 }
+

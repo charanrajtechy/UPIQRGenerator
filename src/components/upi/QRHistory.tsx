@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { toast } from "sonner";
 import { History, Trash2, Clock, Download, Share2, Upload, FileDown } from "lucide-react";
 import type { QRHistoryItem } from "./types";
 import { shareQR, downloadQR } from "./shareQR";
@@ -89,15 +90,17 @@ const QRHistory = ({ onSelect }: QRHistoryProps) => {
     try {
       if (action === "download") {
         await downloadQR(el, item.name, item.upiId);
+        toast.success("QR downloaded successfully!");
       } else {
         const result = await shareQR(el, item.name, item.upiId, item.amount, item.note);
-        if (result === "downloaded") {
-          setShareMsg("QR downloaded. You can share it manually.");
-          setTimeout(() => setShareMsg(null), 4000);
+        if (result === "shared") {
+          toast.success("QR shared successfully!");
+        } else {
+          toast("QR downloaded. You can share it manually.");
         }
       }
     } catch {
-      // cancelled
+      toast.error(action === "download" ? "Failed to download QR" : "Failed to share QR");
     } finally {
       setActiveItem(null);
     }
