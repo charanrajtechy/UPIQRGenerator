@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Info } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Info, Download } from "lucide-react";
 import AboutModal from "./AboutModal";
+import { onInstallAvailabilityChange, promptInstall, isStandalone } from "@/lib/pwa";
 
 const SOCIAL_LINKS = [
   
@@ -17,7 +18,19 @@ const SOCIAL_LINKS = [
 
 const AppFooter = () => {
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [canInstall, setCanInstall] = useState(false);
+  const [installed, setInstalled] = useState(false);
   const version = "v3.9.1";
+
+  useEffect(() => {
+    setInstalled(isStandalone());
+    const off = onInstallAvailabilityChange(setCanInstall);
+    return () => { off(); };
+  }, []);
+
+  const handleInstall = async () => {
+    await promptInstall();
+  };
 
   return (
     <>
@@ -48,7 +61,7 @@ const AppFooter = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-3 flex-wrap">
           <button
             onClick={() => setAboutOpen(true)}
             className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
@@ -56,6 +69,16 @@ const AppFooter = () => {
             <Info className="w-3.5 h-3.5" />
             About This Tool
           </button>
+          {canInstall && !installed && (
+            <button
+              id="installBtn"
+              onClick={handleInstall}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors shadow-sm"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Install App
+            </button>
+          )}
         </div>
 
         <div className="text-center space-y-1">
