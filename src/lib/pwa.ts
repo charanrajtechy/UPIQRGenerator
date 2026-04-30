@@ -10,6 +10,28 @@ type BIPEvent = Event & {
 let deferredPrompt: BIPEvent | null = null;
 const listeners = new Set<(available: boolean) => void>();
 
+let waitingWorker: ServiceWorker | null = null;
+const updateListeners = new Set<(available: boolean) => void>();
+
+function emitUpdate() {
+  updateListeners.forEach((cb) => cb(!!waitingWorker));
+}
+
+export function onUpdateAvailable(cb: (available: boolean) => void) {
+  updateListeners.add(cb);
+  cb(!!waitingWorker);
+  return () => updateListeners.delete(cb);
+}
+
+export function applyUpdate() {
+  if (!waitingWorker) {
+    window.location.reload();
+    return;
+  }
+  // Tell the waiting SW to activate; controllerchange handler reloads the page
+  waitingWorker.postMessage({ type: "SKIP_WAITING" });
+}
+
 function isInIframe(): boolean {
   try {
     return window.self !== window.top;
