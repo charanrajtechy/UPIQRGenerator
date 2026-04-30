@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +10,7 @@ import PaymentPage from "./pages/PaymentPage";
 import NotFound from "./pages/NotFound";
 import ThemeToggle from "@/components/upi/ThemeToggle";
 import FeatureRequestModal from "@/components/upi/FeatureRequestModal";
+import { onUpdateAvailable, applyUpdate } from "@/lib/pwa";
 
 const queryClient = new QueryClient();
 
@@ -29,8 +31,29 @@ function useAnnouncementNotification() {
   }, []);
 }
 
+function useServiceWorkerUpdate() {
+  useEffect(() => {
+    let shown = false;
+    const off = onUpdateAvailable((available) => {
+      if (!available || shown) return;
+      shown = true;
+      toast("A new version is available", {
+        description: "Refresh to get the latest improvements.",
+        duration: Infinity,
+        action: {
+          label: "Refresh",
+          onClick: () => applyUpdate(),
+        },
+      });
+    });
+    return () => { off(); };
+  }, []);
+}
+
+
 const App = () => {
   useAnnouncementNotification();
+  useServiceWorkerUpdate();
 
   return (
   <QueryClientProvider client={queryClient}>
