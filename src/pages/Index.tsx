@@ -17,6 +17,7 @@ import QRScanTestModal from "@/components/upi/QRScanTestModal";
 import QRZoomModal from "@/components/upi/QRZoomModal";
 import ResetAllDialog from "@/components/upi/ResetAllDialog";
 import AppFooter from "@/components/upi/AppFooter";
+import InstallPrompt from "@/components/upi/InstallPrompt";
 import QRSafetyChecker from "@/components/upi/QRSafetyChecker";
 import AutoPayMandateForm from "@/components/upi/AutoPayMandateForm";
 import { buildUpiLink } from "@/components/upi/buildUpiLink";
@@ -291,7 +292,7 @@ const UpiQrGenerator = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8 sm:py-12">
-      
+      <InstallPrompt />
 
       <div className="text-center mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">Open UPI QR Generator</h1>
