@@ -109,11 +109,45 @@ export function initPwa() {
     return;
   }
 
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/sw.js")
+      .then((reg) => {
+        // Already a waiting worker on first load
+        if (reg.waiting && navigator.serviceWorker.controller) {
+          waitingWorker = reg.waiting;
+          emitUpdate();
+        }
+
+        reg.addEventListener("updatefound", () => {
+          const newWorker = reg.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener("statechange", () => {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
+              waitingWorker = newWorker;
+              emitUpdate();
+            }
+          });
+        });
+
+        // Periodically check for updates (every 30 min) and on tab focus
+        const check = () => reg.update().catch(() => {});
+        setInterval(check, 30 * 60 * 1000);
+        window.addEventListener("focus", check);
+      })
       .catch(() => {
         /* silent */
       });
   });
 }
+
