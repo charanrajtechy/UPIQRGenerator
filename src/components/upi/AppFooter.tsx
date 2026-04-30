@@ -17,7 +17,7 @@ const SOCIAL_LINKS = [
 
 const AppFooter = () => {
   const [aboutOpen, setAboutOpen] = useState(false);
-  const version = "v3.9.1";
+  const version = "v5.2.78.0";
 
   return (
     <>
