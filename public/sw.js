@@ -26,7 +26,8 @@ self.addEventListener("message", (event) => {
 });
 
 self.addEventListener("install", (event) => {
-  self.skipWaiting();
+  // Do not auto-skipWaiting — wait for user to confirm via the in-app
+  // "Refresh to update" toast (postMessage SKIP_WAITING).
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) =>
       // Use individual puts so one missing file doesn't fail the whole install
