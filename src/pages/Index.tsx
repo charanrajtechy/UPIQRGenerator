@@ -23,10 +23,12 @@ import AutoPayMandateForm from "@/components/upi/AutoPayMandateForm";
 import { buildUpiLink } from "@/components/upi/buildUpiLink";
 import { shareQR, downloadQR } from "@/components/upi/shareQR";
 import { renderCustomQR, type FinderStyle, type ModuleStyle } from "@/components/upi/renderCustomQR";
+import { composeBrandedNote, isProUser, NOTE_MAX_LENGTH } from "@/lib/branding";
 import type { FormData, QRData, CardStyle, QRSize, QRHistoryItem } from "@/components/upi/types";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Lock } from "lucide-react";
 
 const UPI_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+$/;
 const SIZE_MAP: Record<QRSize, number> = { small: 512, medium: 1024, large: 2048 };
@@ -76,7 +78,7 @@ const UpiQrGenerator = () => {
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(savedTemplate?.logoDataUrl || null);
 
   const [autoGenerate, setAutoGenerate] = useState(true);
-  const [showCredit, setShowCredit] = useState(true);
+  const [removeBranding, setRemoveBranding] = useState(false);
   const [detailsCopied, setDetailsCopied] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -128,7 +130,8 @@ const UpiQrGenerator = () => {
     const amount = form.amount.trim();
     const note = form.note.trim();
     const label = form.label.trim();
-    const upiLink = buildUpiLink(upiId, name, amount, note);
+    const finalNote = composeBrandedNote(note, removeBranding);
+    const upiLink = buildUpiLink(upiId, name, amount, finalNote);
     try {
       const useCustomRenderer = finderStyle !== "square" || moduleStyle !== "square";
       let qrDataUrl: string;
@@ -164,7 +167,7 @@ const UpiQrGenerator = () => {
       }
     } catch { console.error("QR generation failed"); }
     finally { setGenerating(false); }
-  }, [form, logoDataUrl, cardStyle, qrSize, autoGenerate, finderStyle, moduleStyle]);
+  }, [form, logoDataUrl, cardStyle, qrSize, autoGenerate, finderStyle, moduleStyle, removeBranding]);
 
   const saveCurrentToHistory = useCallback(() => {
     if (!qrData) return;
@@ -245,7 +248,7 @@ const UpiQrGenerator = () => {
     setCardStyle("bold-amount");
     setQrData(null);
     setErrors({});
-    setShowCredit(true);
+    setRemoveBranding(false);
     setFinderStyle("square");
     setModuleStyle("square");
   }, []);
@@ -351,7 +354,7 @@ const UpiQrGenerator = () => {
           <PresetAmounts currentAmount={form.amount} onSelect={(v) => handleChange("amount", v)} />
         </div>
 
-        <InputField label="Payment Note" placeholder="Advance for project work" value={form.note} error={errors.note} optional onChange={(v) => handleChange("note", v)} />
+        <InputField label="Payment Note" placeholder="Advance for project work" value={form.note} error={errors.note} optional maxLength={NOTE_MAX_LENGTH} onChange={(v) => handleChange("note", v)} />
         <InputField label="Payment Title / Label" placeholder="Invoice #1234" value={form.label} optional onChange={(v) => handleChange("label", v)} />
 
         {/* Advanced Options */}
@@ -385,16 +388,37 @@ const UpiQrGenerator = () => {
               </button>
             </div>
 
-            {/* App Credit Toggle */}
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-foreground">Include App Credit on QR</label>
-              <button
-                type="button"
-                onClick={() => setShowCredit((p) => !p)}
-                className={`relative w-11 h-6 rounded-full transition-colors ${showCredit ? "bg-primary" : "bg-muted"}`}
-              >
-                <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${showCredit ? "translate-x-5" : ""}`} />
-              </button>
+            {/* Remove Branding Toggle (Pro) */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                  Remove Branding
+                  {!isProUser && <Lock className="w-3.5 h-3.5 text-muted-foreground" aria-label="Pro only" />}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isProUser) {
+                      toast({ title: "This feature will be available in the Pro version soon.", duration: 3000 });
+                      return;
+                    }
+                    setRemoveBranding((p) => !p);
+                  }}
+                  aria-disabled={!isProUser}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${
+                    isProUser && removeBranding ? "bg-primary" : "bg-muted"
+                  } ${!isProUser ? "opacity-70 cursor-not-allowed" : ""}`}
+                >
+                  <span
+                    className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                      isProUser && removeBranding ? "translate-x-5" : ""
+                    }`}
+                  />
+                </button>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Branding is included to support free usage of this tool.
+              </p>
             </div>
 
             <button
@@ -434,7 +458,7 @@ const UpiQrGenerator = () => {
         <div className="mt-8 w-full max-w-md space-y-4 animate-fade-in">
           {/* Clickable QR preview for zoom */}
           <div className="cursor-pointer" onClick={() => setZoomOpen(true)}>
-            <QRPreviewCard ref={cardRef} qrData={qrData} cardStyle={cardStyle} showCredit={showCredit} />
+            <QRPreviewCard ref={cardRef} qrData={qrData} cardStyle={cardStyle} showBranding={!(isProUser && removeBranding)} />
           </div>
 
           {/* QR Status Indicator */}
