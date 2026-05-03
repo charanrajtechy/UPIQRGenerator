@@ -11,6 +11,7 @@ interface InputFieldProps {
   showCopy?: boolean;
   showValidation?: boolean;
   isValid?: boolean;
+  maxLength?: number;
   onChange: (value: string) => void;
 }
 
@@ -24,6 +25,7 @@ const InputField = ({
   showCopy = false,
   showValidation = false,
   isValid,
+  maxLength,
   onChange,
 }: InputFieldProps) => {
   const [copied, setCopied] = useState(false);
@@ -48,7 +50,8 @@ const InputField = ({
           type={type}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          maxLength={maxLength}
+          onChange={(e) => onChange(maxLength ? e.target.value.slice(0, maxLength) : e.target.value)}
           className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all pr-16"
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
@@ -71,7 +74,14 @@ const InputField = ({
           )}
         </div>
       </div>
-      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+      <div className="flex items-center justify-between mt-1 min-h-[1rem]">
+        {error ? <p className="text-xs text-destructive">{error}</p> : <span />}
+        {maxLength && (
+          <p className="text-[10px] text-muted-foreground ml-auto">
+            {value.length}/{maxLength}
+          </p>
+        )}
+      </div>
     </div>
   );
 };

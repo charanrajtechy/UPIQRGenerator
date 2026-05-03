@@ -458,7 +458,7 @@ const AutoPayMandateForm = () => {
       {qrData && (
         <div className="space-y-4 animate-fade-in">
           <div className="cursor-pointer" onClick={() => setZoomOpen(true)}>
-            <QRPreviewCard ref={cardRef} qrData={qrData} cardStyle="bold-amount" showCredit={false} />
+            <QRPreviewCard ref={cardRef} qrData={qrData} cardStyle="bold-amount" showBranding />
           </div>
 
           <div className="flex gap-3">
