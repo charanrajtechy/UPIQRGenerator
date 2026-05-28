@@ -1,0 +1,9 @@
+# Open UPI QR Generator
+
+> Privacy-first, 100% client-side UPI QR code generator. Create fixed-amount UPI QR codes instantly with no login, no tracking, and no server storage.
+
+The app runs entirely in the browser. It generates `upi://pay` deep links and renders them as scannable QR codes for Google Pay, PhonePe, Paytm, and any UPI-compliant app. Built by Charan Raj (CLP Studio).
+
+## Pages
+
+- [Home](/): Generate a fixed-amount UPI QR code from a UPI ID, payee name, amount, and note. Includes customization, history, safety checks, and PNG/PDF export.
