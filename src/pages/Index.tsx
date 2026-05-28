@@ -19,7 +19,7 @@ import ResetAllDialog from "@/components/upi/ResetAllDialog";
 import AppFooter from "@/components/upi/AppFooter";
 import InstallPrompt from "@/components/upi/InstallPrompt";
 import QRSafetyChecker from "@/components/upi/QRSafetyChecker";
-import AutoPayMandateForm from "@/components/upi/AutoPayMandateForm";
+
 import { buildUpiLink } from "@/components/upi/buildUpiLink";
 import { shareQR, downloadQR } from "@/components/upi/shareQR";
 import { renderCustomQR, type FinderStyle, type ModuleStyle } from "@/components/upi/renderCustomQR";
