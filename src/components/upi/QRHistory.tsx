@@ -170,7 +170,7 @@ const QRHistory = ({ onSelect }: QRHistoryProps) => {
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
           <History className="w-4 h-4" /> Recent QR Codes
-        </h3>
+        </h2>
         <div className="flex gap-2 items-center">
           {items.length > 0 && (
             <>
