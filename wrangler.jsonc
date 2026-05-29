@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "upi qr generator",
+  "name": "upi-qr-generator",
   "compatibility_date": "2026-05-29",
   "compatibility_flags": ["nodejs_compat"],
   "main": "dist/server/server.js",
