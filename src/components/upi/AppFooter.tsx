@@ -23,7 +23,7 @@ const AppFooter = () => {
     <>
       <footer className="w-full max-w-md mx-auto mt-12 pb-8 space-y-6">
         <div className="border-t border-border pt-6 text-center space-y-2">
-          <h3 className="text-sm font-bold text-foreground">Open UPI QR Generator</h3>
+          <h2 className="text-sm font-bold text-foreground">Open UPI QR Generator</h2>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Privacy-first UPI QR generator that runs entirely in your browser.<br />
             No login. No tracking. No server storage.
@@ -40,6 +40,7 @@ const AppFooter = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={link.label}
+                aria-label={`${link.label} (opens in new tab)`}
                 className="p-2 rounded-xl border border-border hover:bg-muted hover:border-muted-foreground/30 transition-all text-muted-foreground hover:text-foreground"
               >
                 {link.svg}

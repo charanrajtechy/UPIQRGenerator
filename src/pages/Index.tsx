@@ -328,7 +328,8 @@ const UpiQrGenerator = () => {
         </div>
       ) : (
       <>
-      <div className="w-full max-w-md bg-card rounded-2xl shadow-card p-6 sm:p-8 space-y-5">
+      <main className="w-full max-w-md bg-card rounded-2xl shadow-card p-6 sm:p-8 space-y-5">
+        <h2 className="sr-only">Payment Details</h2>
         <InputField
           label="UPI ID"
           placeholder="yourname@paytm"
@@ -355,10 +356,12 @@ const UpiQrGenerator = () => {
 
         {/* Advanced Options */}
         <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
-          <CollapsibleTrigger className="flex items-center justify-between w-full py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            <span>Advanced Options</span>
-            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${advancedOpen ? "rotate-180" : ""}`} />
-          </CollapsibleTrigger>
+          <h2>
+            <CollapsibleTrigger className="flex items-center justify-between w-full py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <span>Advanced Options</span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${advancedOpen ? "rotate-180" : ""}`} />
+            </CollapsibleTrigger>
+          </h2>
           <CollapsibleContent className="space-y-5 pt-3">
             <TemplateActions upiId={form.upiId} name={form.name} logoDataUrl={logoDataUrl} onLoad={handleTemplateLoad} />
             <LogoUpload logoDataUrl={logoDataUrl} onLogoChange={setLogoDataUrl} />
@@ -378,6 +381,9 @@ const UpiQrGenerator = () => {
               <button
                 type="button"
                 onClick={() => setAutoGenerate((p) => !p)}
+                role="switch"
+                aria-checked={autoGenerate}
+                aria-label="Auto Generate QR"
                 className={`relative w-11 h-6 rounded-full transition-colors ${autoGenerate ? "bg-primary" : "bg-muted"}`}
               >
                 <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${autoGenerate ? "translate-x-5" : ""}`} />
@@ -390,6 +396,9 @@ const UpiQrGenerator = () => {
               <button
                 type="button"
                 onClick={() => setShowCredit((p) => !p)}
+                role="switch"
+                aria-checked={showCredit}
+                aria-label="Include App Credit on QR"
                 className={`relative w-11 h-6 rounded-full transition-colors ${showCredit ? "bg-primary" : "bg-muted"}`}
               >
                 <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${showCredit ? "translate-x-5" : ""}`} />
@@ -423,7 +432,7 @@ const UpiQrGenerator = () => {
             {generating ? "Generating…" : "Generate QR Code"}
           </button>
         )}
-      </div>
+      </main>
 
       <div className="w-full max-w-md mt-4">
         <QRHistory onSelect={handleHistorySelect} />
