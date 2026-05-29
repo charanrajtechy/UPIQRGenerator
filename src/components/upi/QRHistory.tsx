@@ -168,7 +168,7 @@ const QRHistory = ({ onSelect }: QRHistoryProps) => {
   return (
     <div className="w-full bg-card rounded-xl shadow-card p-4 space-y-3 border border-border">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+        <h2 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
           <History className="w-4 h-4" /> Recent QR Codes
         </h3>
         <div className="flex gap-2 items-center">
