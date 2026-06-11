@@ -19,8 +19,6 @@ Users can customize the visual appearance of both the QR code itself and the sur
 ## Pages
 
 - [Home](/): The main QR generator interface. Contains input fields, preset amount buttons, advanced options, live QR preview, export/share controls, and QR history.
-- [Payment Page](/pay): A dedicated payment landing page that decodes UPI payment links for direct scanning.
-- [Encoded Payment](/p/:data): A dynamic route that accepts base64-encoded payment data and renders a shareable payment page.
 - [Not Found](/not-found, implicit): Clean 404 fallback with a return-to-home link.
 
 ## Core Features
