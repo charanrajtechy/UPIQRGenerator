@@ -47,7 +47,6 @@ function loadTemplate(): { upiId: string; name: string; logoDataUrl?: string } |
 }
 
 const UpiQrGenerator = () => {
-  const [mode, setMode] = useState<"payment" | "mandate">("payment");
   const [betaEnabled, setBetaEnabled] = useState(() => localStorage.getItem("beta_features") === "true");
 
   // Listen for beta toggle changes from settings
