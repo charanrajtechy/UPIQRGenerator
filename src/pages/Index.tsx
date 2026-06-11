@@ -454,15 +454,6 @@ const UpiQrGenerator = () => {
             </button>
           </div>
 
-          {/* Create Payment Page - Coming Soon */}
-          <button
-            type="button"
-            disabled
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-accent-foreground/50 font-semibold text-sm border border-border cursor-not-allowed opacity-70 relative"
-          >
-            <Link2 className="w-4 h-4" /> Create Payment Page
-            <span className="ml-1 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-bold uppercase tracking-wider">Coming Soon</span>
-          </button>
 
           <button
             type="button"
