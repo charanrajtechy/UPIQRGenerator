@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import QRCode from "qrcode";
-import { Copy, Check, RotateCcw, ChevronDown, FileOutput, ScanLine, CheckCircle2, AlertTriangle, Link2 } from "lucide-react";
+import { Copy, Check, RotateCcw, ChevronDown, FileOutput, ScanLine, CheckCircle2, AlertTriangle } from "lucide-react";
 
 import InputField from "@/components/upi/InputField";
 import PresetAmounts from "@/components/upi/PresetAmounts";
@@ -18,7 +18,7 @@ import QRZoomModal from "@/components/upi/QRZoomModal";
 import ResetAllDialog from "@/components/upi/ResetAllDialog";
 import AppFooter from "@/components/upi/AppFooter";
 import QRSafetyChecker from "@/components/upi/QRSafetyChecker";
-import AutoPayMandateForm from "@/components/upi/AutoPayMandateForm";
+
 import { buildUpiLink } from "@/components/upi/buildUpiLink";
 import { shareQR, downloadQR } from "@/components/upi/shareQR";
 import { renderCustomQR, type FinderStyle, type ModuleStyle } from "@/components/upi/renderCustomQR";
@@ -47,7 +47,6 @@ function loadTemplate(): { upiId: string; name: string; logoDataUrl?: string } |
 }
 
 const UpiQrGenerator = () => {
-  const [mode, setMode] = useState<"payment" | "mandate">("payment");
   const [betaEnabled, setBetaEnabled] = useState(() => localStorage.getItem("beta_features") === "true");
 
   // Listen for beta toggle changes from settings
@@ -299,35 +298,6 @@ const UpiQrGenerator = () => {
           Generate professional UPI QR codes for payments. No tracking, no storage — 100% private.
         </p>
       </div>
-
-      {/* Beta Mode Toggle */}
-      {betaEnabled && (
-        <div className="w-full max-w-md mb-4 flex bg-muted rounded-xl p-1">
-          <button
-            type="button"
-            onClick={() => setMode("payment")}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === "payment" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            Payment QR
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("mandate")}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${mode === "mandate" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            AutoPay Mandate
-          </button>
-        </div>
-      )}
-
-      {/* Mandate Mode */}
-      {betaEnabled && mode === "mandate" ? (
-        <div className="w-full max-w-md">
-          <AutoPayMandateForm />
-          <AppFooter />
-        </div>
-      ) : (
-      <>
       <main className="w-full max-w-md bg-card rounded-2xl shadow-card p-6 sm:p-8 space-y-5">
         <h2 className="sr-only">Payment Details</h2>
         <InputField
@@ -484,15 +454,6 @@ const UpiQrGenerator = () => {
             </button>
           </div>
 
-          {/* Create Payment Page - Coming Soon */}
-          <button
-            type="button"
-            disabled
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-accent-foreground/50 font-semibold text-sm border border-border cursor-not-allowed opacity-70 relative"
-          >
-            <Link2 className="w-4 h-4" /> Create Payment Page
-            <span className="ml-1 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-bold uppercase tracking-wider">Coming Soon</span>
-          </button>
 
           <button
             type="button"
@@ -543,8 +504,6 @@ const UpiQrGenerator = () => {
         onClose={() => setResetDialogOpen(false)}
         onConfirm={handleResetAll}
       />
-      </>
-      )}
     </div>
   );
 };

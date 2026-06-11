@@ -18,23 +18,11 @@ interface DecodedUpi {
   amount: string;
   note: string;
   raw: string;
-  isMandate?: boolean;
-  mc?: string;
-  mn?: string;
-  tid?: string;
-  orgid?: string;
-  recur?: string;
-  amrule?: string;
-  validitystart?: string;
-  validityend?: string;
-  txnType?: string;
 }
 
 function parseUpiLink(data: string): DecodedUpi | null {
   try {
-    const isMandate = data.startsWith("upi://mandate");
-    const isPay = data.startsWith("upi://pay");
-    if (!isMandate && !isPay) return null;
+    if (!data.startsWith("upi://pay")) return null;
     const queryStr = data.split("?")[1];
     if (!queryStr) return null;
     const params = new URLSearchParams(queryStr);
@@ -44,16 +32,6 @@ function parseUpiLink(data: string): DecodedUpi | null {
       amount: params.get("am") || "",
       note: params.get("tn") || "",
       raw: data,
-      isMandate,
-      mc: params.get("mc") || "",
-      mn: params.get("mn") || "",
-      tid: params.get("tid") || "",
-      orgid: params.get("orgid") || "",
-      recur: params.get("recur") || "",
-      amrule: params.get("amrule") || "",
-      validitystart: params.get("validitystart") || "",
-      validityend: params.get("validityend") || "",
-      txnType: params.get("txnType") || "",
     };
   } catch {
     return null;
@@ -174,7 +152,7 @@ const QRScanTestModal = ({ open, onClose, qrDataUrl, logoDataUrl, expectedData, 
               {decoded && (
                 <div className="w-full rounded-xl border border-border bg-muted/50 p-4 space-y-2.5">
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                    {decoded.isMandate ? "Decoded Mandate Data" : "Decoded Payment Data"}
+                    Decoded Payment Data
                   </p>
 
                   <div className="space-y-2">
@@ -198,60 +176,6 @@ const QRScanTestModal = ({ open, onClose, qrDataUrl, logoDataUrl, expectedData, 
                       <div className="flex justify-between items-start gap-2">
                         <span className="text-xs text-muted-foreground shrink-0">Note</span>
                         <span className="text-xs font-medium text-foreground text-right">{decoded.note}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.tid && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Transaction ID</span>
-                        <span className="text-xs font-medium text-foreground text-right break-all">{decoded.tid}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.mc && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Merchant Code</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.mc}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.mn && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Merchant Name</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.mn}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.orgid && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Org ID</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.orgid}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.recur && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Recurrence</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.recur}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.amrule && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Amount Rule</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.amrule}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.validitystart && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Start Date</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.validitystart}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.validityend && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">End Date</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.validityend}</span>
-                      </div>
-                    )}
-                    {decoded.isMandate && decoded.txnType && (
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="text-xs text-muted-foreground shrink-0">Txn Type</span>
-                        <span className="text-xs font-medium text-foreground text-right">{decoded.txnType}</span>
                       </div>
                     )}
                   </div>
