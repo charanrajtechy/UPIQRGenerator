@@ -73,7 +73,7 @@ Users can customize the visual appearance of both the QR code itself and the sur
 - **Stack:** React 18, TypeScript, Vite 6+, Tailwind CSS v3, shadcn/ui primitives, React Router, TanStack Query, and the `qrcode` npm library.
 - **Rendering:** Custom QR renderer alongside the standard `qrcode` library for advanced finder/module styling. Payment cards are rendered as DOM elements and exported to PNG via HTML-to-image techniques or canvas composition.
 - **State Management:** React hooks (`useState`, `useEffect`, `useCallback`, `useRef`) with `localStorage` as the only persistence layer.
-- **Routing:** Three routes handled by React Router — `/`, `/pay`, `/p/:data`, and a catch-all `*` for 404s.
+- **Routing:** Single primary route `/` with a catch-all `*` for 404s, handled by React Router.
 - **Styling:** Tailwind CSS with a custom semantic design token system (`--background`, `--foreground`, `--primary`, `--card`, `--border`, etc.) supporting both light and dark modes via CSS variables.
 - **Performance:** Debounced QR regeneration (300ms), lazy loading of heavy modals, and optimized re-renders with `useCallback`.
 - **SEO:** Meta tags (title, description, Open Graph, Twitter Cards), canonical URL, JSON-LD structured data (SoftwareApplication + WebSite schemas), `robots.txt`, and `sitemap.xml`.
