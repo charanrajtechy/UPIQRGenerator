@@ -504,8 +504,6 @@ const UpiQrGenerator = () => {
         onClose={() => setResetDialogOpen(false)}
         onConfirm={handleResetAll}
       />
-      </>
-      )}
     </div>
   );
 };
