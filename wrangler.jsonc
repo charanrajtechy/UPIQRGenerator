@@ -1,5 +1,5 @@
 {
-  "name": "upi-qr-generator",
+  "name": "upiqrgenerator",
   "compatibility_date": "2024-01-01",
   "assets": {
     "directory": "./dist"
