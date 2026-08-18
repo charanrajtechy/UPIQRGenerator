@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Info } from "lucide-react";
+import { Info, Heart } from "lucide-react";
 import AboutModal from "./AboutModal";
 
 const AppFooter = () => {
@@ -15,6 +15,18 @@ const AppFooter = () => {
             Privacy-first UPI QR generator that runs entirely in your browser.<br />
             No login. No tracking. No server storage.
           </p>
+        </div>
+
+        <div className="text-center space-y-2">
+          <a
+            href="https://rzp.io/rzp/pBwC89T"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-xl border border-border hover:bg-muted hover:border-muted-foreground/30 transition-all text-muted-foreground hover:text-foreground"
+          >
+            <Heart className="w-3.5 h-3.5" />
+            Support or Request a Custom Build
+          </a>
         </div>
 
         <div className="flex items-center justify-center gap-3">
