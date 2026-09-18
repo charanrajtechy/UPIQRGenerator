@@ -1,7 +1,16 @@
 import QRCode from "qrcode";
 
 export type FinderStyle = "square" | "smooth" | "rounded";
-export type ModuleStyle = "square" | "dots" | "rounded-square" | "soft-rounded" | "diamond";
+export type ModuleStyle =
+  | "square"
+  | "dots"
+  | "rounded-square"
+  | "soft-rounded"
+  | "diamond"
+  | "inset-square"
+  | "horizontal-pill"
+  | "vertical-pill"
+  | "hexagon";
 
 interface RenderOptions {
   data: string;
@@ -131,6 +140,36 @@ function drawModule(
       ctx.moveTo(x + size / 2, y);
       ctx.lineTo(x + size, y + size / 2);
       ctx.lineTo(x + size / 2, y + size);
+      ctx.lineTo(x, y + size / 2);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    }
+    case "inset-square": {
+      const inset = size * 0.14;
+      ctx.fillRect(x + inset, y + inset, size - inset * 2, size - inset * 2);
+      break;
+    }
+    case "horizontal-pill": {
+      const height = size * 0.62;
+      drawRoundedRect(ctx, x, y + (size - height) / 2, size, height, height / 2);
+      ctx.fill();
+      break;
+    }
+    case "vertical-pill": {
+      const width = size * 0.62;
+      drawRoundedRect(ctx, x + (size - width) / 2, y, width, size, width / 2);
+      ctx.fill();
+      break;
+    }
+    case "hexagon": {
+      const inset = size * 0.18;
+      ctx.beginPath();
+      ctx.moveTo(x + inset, y);
+      ctx.lineTo(x + size - inset, y);
+      ctx.lineTo(x + size, y + size / 2);
+      ctx.lineTo(x + size - inset, y + size);
+      ctx.lineTo(x + inset, y + size);
       ctx.lineTo(x, y + size / 2);
       ctx.closePath();
       ctx.fill();

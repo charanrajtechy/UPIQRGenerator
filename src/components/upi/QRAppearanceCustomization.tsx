@@ -77,6 +77,63 @@ function ModulePreview({ style }: { style: ModuleStyle }) {
           );
           break;
         }
+        case "inset-square": {
+          const inset = cell * 0.13;
+          modules.push(
+            <rect
+              key={`${r}-${c}`}
+              x={x + inset}
+              y={y + inset}
+              width={cell * 0.9 - inset * 2}
+              height={cell * 0.9 - inset * 2}
+              className="fill-foreground"
+            />
+          );
+          break;
+        }
+        case "horizontal-pill": {
+          const height = cell * 0.56;
+          modules.push(
+            <rect
+              key={`${r}-${c}`}
+              x={x}
+              y={y + (cell * 0.9 - height) / 2}
+              width={cell * 0.9}
+              height={height}
+              rx={height / 2}
+              className="fill-foreground"
+            />
+          );
+          break;
+        }
+        case "vertical-pill": {
+          const width = cell * 0.56;
+          modules.push(
+            <rect
+              key={`${r}-${c}`}
+              x={x + (cell * 0.9 - width) / 2}
+              y={y}
+              width={width}
+              height={cell * 0.9}
+              rx={width / 2}
+              className="fill-foreground"
+            />
+          );
+          break;
+        }
+        case "hexagon": {
+          const width = cell * 0.9;
+          const height = cell * 0.9;
+          const inset = width * 0.18;
+          modules.push(
+            <polygon
+              key={`${r}-${c}`}
+              points={`${x + inset},${y} ${x + width - inset},${y} ${x + width},${y + height / 2} ${x + width - inset},${y + height} ${x + inset},${y + height} ${x},${y + height / 2}`}
+              className="fill-foreground"
+            />
+          );
+          break;
+        }
       }
     }
   }
@@ -100,6 +157,10 @@ const MODULE_OPTIONS: { value: ModuleStyle; label: string }[] = [
   { value: "rounded-square", label: "Rounded" },
   { value: "soft-rounded", label: "Soft" },
   { value: "diamond", label: "Diamond" },
+  { value: "inset-square", label: "Inset" },
+  { value: "horizontal-pill", label: "Horizontal" },
+  { value: "vertical-pill", label: "Vertical" },
+  { value: "hexagon", label: "Hexagon" },
 ];
 
 const QRAppearanceCustomization = ({ finderStyle, moduleStyle, onFinderChange, onModuleChange }: Props) => {
