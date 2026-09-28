@@ -1,1 +1,17 @@
+const upiId = "charanrajtechy@fam";
+const payeeName = "Charan Raj Techy";
 
+const sponsorUrl = `upi://pay?${new URLSearchParams({
+  pa: upiId,
+  pn: payeeName,
+  cu: "INR",
+  tn: "Support UPI QR Generator",
+})}`;
+
+export function SponsorButton() {
+  return (
+    <a href={sponsorUrl}>
+      Sponsor Us
+    </a>
+  );
+}
